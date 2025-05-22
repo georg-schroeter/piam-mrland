@@ -32,6 +32,7 @@
 #' @param country_level    Whether output shall be at country level.
 #'                         Requires aggregate=FALSE in calcOutput.
 #' @param luhBaseYear      Base year of LUH land area
+#' @param resolution       Resolution (0.25 or 0.5 degrees)
 #'
 #' @return magpie object in cellular resolution
 #' @author Patrick v. Jeetze, Felicitas Beier
@@ -48,7 +49,7 @@
 #'
 
 calcAvlCropland <- function(marginal_land = "magpie", cell_upper_bound = 0.9, country_level = FALSE, # nolint
-                            cells = "lpjcell", luhBaseYear = "y1995") {
+                            cells = "lpjcell", luhBaseYear = "y1995", resolution = 0.25) {
 
   # extract function arguments
   marginalLand <- marginal_land # nolint
@@ -61,7 +62,7 @@ calcAvlCropland <- function(marginal_land = "magpie", cell_upper_bound = 0.9, co
 
   # read luh data in chosen base year
   luh <- calcOutput("LUH2v2", landuse_types = "magpie", aggregate = FALSE,
-                    cellular = TRUE, cells = "lpjcell", irrigation = FALSE, years = luhBaseYear)
+                    cellular = TRUE, cells = "lpjcell", irrigation = FALSE, years = luhBaseYear, resolution = resolution)
   # sum land area per grid cell
   landarea <- dimSums(luh, dim = 3)
 
@@ -216,7 +217,7 @@ calcAvlCropland <- function(marginal_land = "magpie", cell_upper_bound = 0.9, co
 
   } else {
 
-    if (cells == "magpiecell") {
+    if (cells == "magpiecell" && resolution == 0.5) {
 
       out <- toolCoord2Isocell(x)
 
@@ -225,7 +226,7 @@ calcAvlCropland <- function(marginal_land = "magpie", cell_upper_bound = 0.9, co
       out <- x
 
     } else {
-      stop("Please specify cells argument")
+      stop("Please specify cells argument and resolution")
     }
   }
 
