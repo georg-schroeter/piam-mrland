@@ -9,7 +9,8 @@ calcAvlCropland(
   cell_upper_bound = 0.9,
   country_level = FALSE,
   cells = "lpjcell",
-  luhBaseYear = "y1995"
+  luhBaseYear = "y1995",
+  resolution = 0.25
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ Requires aggregate=FALSE in calcOutput.}
 \item{cells}{magpiecell (59199 cells) or lpjcell (67420 cells)}
 
 \item{luhBaseYear}{Base year of LUH land area}
+
+\item{resolution}{Resolution (0.25 or 0.5 degrees)}
 }
 \value{
 magpie object in cellular resolution
