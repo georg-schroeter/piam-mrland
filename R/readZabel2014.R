@@ -133,6 +133,24 @@ readZabel2014 <- function(subtype = "all_marginal:rainfed_and_irrigated") {
 
   # get spatial mapping
   map <- toolGetMappingCoord2Country(pretty = TRUE)
+
+  ### Double the mapping resolution while keeping
+  mapQuart <- map[FALSE, ]
+  for (i in rownames(map)) {
+    row <- map[i, ]
+    coords <- row[c("lon", "lat")]
+    for (shift in list(c(-0.125, -0.125), c(-0.125, 0.125), c(0.125, -0.125), c(0.125, 0.125))) {
+      coordsQuart <- coords + shift
+      # reconstruct the string names
+      rowQuart <- data.frame(iso = row["iso"], coords = paste0(gsub("\\.", "p", coordsQuart["lon"]), ".",
+                                                               gsub("\\.", "p", coordsQuart["lat"])),
+                             lon = coordsQuart["lon"], lat = coordsQuart["lat"])
+      # add row to mapQuart
+      mapQuart <- rbind(mapQuart, rowQuart)
+    }
+  }
+  map <- mapQuart
+
   # transform raster to magpie object
   out <- as.magpie(extract(cropsuitZabel05, map[c("lon", "lat")])[, 2], spatial = 1)
   # set dimension names
